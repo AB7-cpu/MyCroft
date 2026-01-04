@@ -2,32 +2,49 @@
 
 This directory contains experimental code and models used to evaluate different technologies before integrating them into the main assistant.
 
-## Directory Structure
+## Technology Evolution
 
-### 1. `wake_word/`
-*   **Purpose**: Testing low-latency wake word detection.
-*   **Key File**: `wake_word_test.py`
-*   **Technology**: `openwakeword` (ONNX based).
+### 1. Wake Word Detection
+*   **Technology**: [openWakeWord](https://github.com/dscripka/openWakeWord) (ONNX based).
+*   **History**: First model explored and adopted.
 *   **Status**: **Adopted**.
-    *   Verified "Hey Mycroft" model.
+    *   Provides high reliability and low latency.
     *   Integrated into `wakeword.py` and `backup_model.py`.
 
-### 2. `speech_to_text/`
-*   **Purpose**: Evaluating transcription accuracy and speed.
-*   **Key File**: `main.py`
-*   **Technology**: `openai-whisper` (Original PyTorch implementation).
-*   **Status**: **Evolution**.
-    *   Started with `whisper` (small model).
-    *   Project upgraded to `faster_whisper` in `stt_vad.py` for better performance on GPU (`float16`).
+### 2. Speech to Text (STT)
+*   **Technologies**:
+    *   [SpeechRecognition](https://github.com/Uberi/speech_recognition) (.recognize_google())
+    *   [Whisper](https://github.com/openai/whisper) (small model)
+    *   [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (medium model, GPU)
+*   **History**:
+    1.  Started with `SpeechRecognition` using Google's API.
+    2.  **Challenge**: High latency made real-time interaction difficult.
+    3.  Evaluated `Whisper` (small) for local processing.
+    4.  Upgraded to `faster-whisper` (medium) for optimal performance.
+*   **Status**: **Adopted**.
+    *   Currently using `faster_whisper` in `stt_vad.py` with `float16` on CUDA.
 
-### 3. `text_to_speech/`
-*   **Purpose**: Finding high-quality, emotive TTS.
-*   **Subdirectories**:
-    *   `OpenVoice/`: Experiments with OpenVoice (cost-effective cloning).
-    *   `StyleTTS2/`: Experiments with StyleTTS2 (high fidelity).
-*   **Status**: **On Hold / Alternative Selected**.
-    *   Currently using **PlayAI** (via Groq) in `tts.py` for the best balance of speed and quality without heavy local VRAM usage.
+### 3. Text to Speech (TTS)
+*   **Technologies**:
+    *   [pyttsx3](https://github.com/nateshmbhat/pyttsx3)
+    *   [OpenVoice](https://github.com/myshell-ai/OpenVoice)
+    *   [StyleTTS2](https://github.com/yl4579/StyleTTS2)
+    *   [Coqui XTTS2](https://github.com/coqui-ai/TTS)
+    *   [VibeVoice](https://github.com/microsoft/VibeVoice)
+*   **History**:
+    1.  Started with `pyttsx3`.
+    2.  **Challenge**: Fast but robotic and unnatural.
+    3.  Explored `StyleTTS2` and `OpenVoice`.
+    4.  Used `OpenVoice` for a while until discovering `Coqui XTTS2`.
+    5.  **Challenge**: `XTTS2` provided great natural voices but had streaming difficulties.
+    6.  Adopted `VibeVoice` for current implementation.
+*   **Status**: **Adopted (Local)**.
+    *   Using local `VibeVoice` via WebSocket streaming in `tts.py`.
+
+## Directory Structure
+*   `wake_word/`: Testing low-latency wake word detection.
+*   `speech_to_text/`: Evaluating transcription accuracy and speed.
+*   `text_to_speech/`: Finding high-quality, emotive TTS. Includes experiments with `OpenVoice`, `StyleTTS2`, etc.
 
 ## Notes
 *   **`audio.mp3`**: Sample audio used for testing Whisper transcription.
-*   **`.text_to_speech`**: Likely a hidden cache or config directory for TTS models.

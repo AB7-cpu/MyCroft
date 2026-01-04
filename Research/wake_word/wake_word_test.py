@@ -10,7 +10,7 @@ model = Model(wakeword_models=["hey_mycroft"])
 audio = pyaudio.PyAudio()
 mic = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1280)
 
-print("Listening for 'Victus'...")
+print("Listening for 'hey mycroft'...")
 i = 0
 while True:
     # Get audio
