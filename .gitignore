@@ -1,0 +1,5 @@
+__pycache__
+venv
+VibeVoice
+.text_to_speech
+.env
